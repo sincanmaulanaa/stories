@@ -150,6 +150,66 @@
   }
 }
 
+@media screen and (max-width: 768px) {
+  .report-detail__images {
+    height: 300px;
+  }
+
+  .report-detail__body-container {
+    margin-top: -50px;
+  }
+
+  .report-detail__body {
+    padding: 30px 20px;
+  }
+
+  .report-detail__title {
+    font-size: 1.8rem;
+  }
+
+  .report-detail__coordinates {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .report-detail__map__container {
+    height: 350px;
+  }
+
+  .report-detail__action-btn {
+    padding: 12px 20px;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .report-detail__images {
+    height: 550px;
+  }
+
+  .report-detail__body-container {
+    margin-top: -100px;
+  }
+
+  .report-detail__body {
+    padding: 50px;
+  }
+
+  .report-detail__title {
+    font-size: 2.8rem;
+  }
+
+  .report-detail__actions {
+    justify-content: flex-start;
+  }
+
+  .report-detail__action-btn {
+    width: auto;
+  }
+}
+
 @media screen and (width > 800px) {
   /* Authentication pages */
   .login-container,
