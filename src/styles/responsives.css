@@ -166,7 +166,6 @@
   .reports-list__map__container,
   .reports-list__map {
     height: 550px;
-    border-radius: 20px;
   }
 
   .reports-list {
@@ -276,7 +275,7 @@
   .reports-list__map__container,
   .reports-list__map {
     height: 600px;
-    border-radius: 0 0 24px 24px;
+    border-radius: 16px;
   }
 
   .reports-list {
