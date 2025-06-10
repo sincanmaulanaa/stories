@@ -7,10 +7,10 @@ export default class BookmarkPage {
 
   async render() {
     return `
-      <div class="content">
-        <h2 class="content__heading">Story Collection</h2>
-        <div id="bookmark-content" class="stories"></div>
-      </div>
+       <div class="content">
+      <h2 class="content__heading">Story Collection</h2>
+      <div id="bookmark-content" class="stories"></div>
+    </div>
     `;
   }
 
@@ -18,8 +18,12 @@ export default class BookmarkPage {
     this.data = await getAllSavedStories();
     const bookmarkContainer = document.getElementById('bookmark-content');
     if (this.data.length === 0) {
-      bookmarkContainer.innerHTML =
-        '<p class="empty-message">Tidak ada Story Collection tersimpan.</p>';
+      bookmarkContainer.innerHTML = `
+    <div class="empty-message">
+      <p>Tidak ada Story Collection tersimpan.</p>
+      <p>Simpan cerita favorit Anda untuk melihatnya di sini.</p>
+    </div>
+  `;
       return;
     }
 
@@ -35,14 +39,26 @@ export default class BookmarkPage {
 
   renderBookmarkItem(story) {
     return `
-      <div class="story-item">
-        <h3>${story.name}</h3>
-        <p>${story.description}</p>
-        <p>Latitude: ${story.lat}</p>
-        <p>Longitude: ${story.lon}</p>
+       <div class="story-item">
+      <div class="story-item__image">
         <img src="${story.photoUrl}" alt="${story.name}" />
-        <button class="delete-btn" data-id="${story.id}">Hapus</button>
+        <button class="delete-btn" data-id="${story.id}" aria-label="Delete story">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
+      <div class="story-item__content">
+        <h3>${story.name}</h3>
+        <p class="story-item__description">${story.description}</p>
+        <div class="story-item__location">
+          <span class="story-item__coordinate">
+            <i class="fas fa-map-marker-alt"></i> Lat: ${story.lat}
+          </span>
+          <span class="story-item__coordinate">
+            <i class="fas fa-map-pin"></i> Long: ${story.lon}
+          </span>
+        </div>
+      </div>
+    </div>
     `;
   }
 }
