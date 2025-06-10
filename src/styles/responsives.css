@@ -61,6 +61,25 @@
   }
 }
 
+@media screen and (max-width: 600px) {
+  .not-found-graphic {
+    height: 180px;
+  }
+
+  .not-found-circle {
+    width: 160px;
+    height: 160px;
+  }
+
+  .not-found-title {
+    font-size: 100px;
+  }
+
+  .not-found-subtitle {
+    font-size: 1.7rem;
+  }
+}
+
 @media screen and (width > 600px) {
   ::view-transition-old(root) {
     animation:

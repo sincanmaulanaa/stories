@@ -1,13 +1,26 @@
 export default class RenderNotFound {
   async render() {
     return `
-        <section style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center;">
-          <h1 style="font-size: 48px; font-weight: bold;">404</h1>
-          <p style="font-size: 18px;">Halaman yang Anda cari tidak ditemukan.</p>
-          <a href="/" style="margin-top: 20px; color: blue; text-decoration: none;">Kembali ke Beranda</a>
-        </section>
-      `;
+      <section class="not-found-container">
+        <div class="not-found-content">
+          <div class="not-found-graphic">
+            <div class="not-found-circle"></div>
+            <h1 class="not-found-title">404</h1>
+          </div>
+          <h2 class="not-found-subtitle">Halaman Tidak Ditemukan</h2>
+          <p class="not-found-description">Halaman yang Anda cari tidak tersedia atau telah dipindahkan ke alamat lain.</p>
+          <a href="#/" class="not-found-button btn">
+            <i class="fas fa-home"></i> Kembali ke Beranda
+          </a>
+        </div>
+      </section>
+    `;
   }
 
-  async afterRender() {}
+  async afterRender() {
+    setTimeout(() => {
+      document.querySelector('.not-found-circle').classList.add('animate');
+      document.querySelector('.not-found-title').classList.add('animate');
+    }, 100);
+  }
 }

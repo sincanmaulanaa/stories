@@ -10,6 +10,7 @@ export default class BookmarkPage {
        <div class="content">
       <h2 class="content__heading">Story Collection</h2>
       <div id="bookmark-content" class="stories"></div>
+      <div id="empty-container" class="empty-container"></div>
     </div>
     `;
   }
@@ -17,8 +18,10 @@ export default class BookmarkPage {
   async afterRender() {
     this.data = await getAllSavedStories();
     const bookmarkContainer = document.getElementById('bookmark-content');
+    const emptyContainer = document.getElementById('empty-container');
     if (this.data.length === 0) {
-      bookmarkContainer.innerHTML = `
+      bookmarkContainer.innerHTML = `<div></div>`;
+      emptyContainer.innerHTML = `
     <div class="empty-message">
       <p>Tidak ada Story Collection tersimpan.</p>
       <p>Simpan cerita favorit Anda untuk melihatnya di sini.</p>

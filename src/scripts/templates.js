@@ -15,7 +15,7 @@ export function generateLoaderAbsoluteTemplate() {
 export function generateMainNavigationListTemplate() {
   return `
     <li><a href="#/collection">Story Collection</a></li>
-    <li><a href="#/404">404</a></li>
+    <li><a href="#/404">Not Found</a></li>
   `;
 }
 
