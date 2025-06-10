@@ -9,7 +9,11 @@ import ReportDetailPresenter from './story-detail-presenter';
 import { parseActivePathname } from '../../routes/url-parser';
 import * as StoryAppApi from '../../data/api';
 import { initializeMap, addMarkersToMap, getLocationDetails } from '../../utils/map-utils';
-import { handleSubscribe, handleUnsubscribe } from '../../utils/pushNotification';
+import {
+  debugServiceWorker,
+  handleSubscribe,
+  handleUnsubscribe,
+} from '../../utils/pushNotification';
 
 export default class ReportDetailPage {
   #presenter = null;
@@ -27,6 +31,7 @@ export default class ReportDetailPage {
   }
 
   async afterRender() {
+    await debugServiceWorker();
     this.#presenter = new ReportDetailPresenter(parseActivePathname().id, {
       view: this,
       apiModel: StoryAppApi,
@@ -113,19 +118,28 @@ export default class ReportDetailPage {
     if (notifyButton) {
       notifyButton.addEventListener('click', async () => {
         try {
+          notifyButton.disabled = true;
+          notifyButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
           const isSubscribed = await this.checkSubscriptionStatus();
           if (isSubscribed) {
             await handleUnsubscribe();
+            alert('Successfully unsubscribed from notifications');
           } else {
-            await handleSubscribe();
+            const result = await handleSubscribe();
+            if (result) {
+              alert('Successfully subscribed to notifications');
+            }
           }
-          await this.updateSubscriptionUI();
         } catch (error) {
-          this.#presenter.showNotificationPermissionError();
+          console.error('Notification error:', error);
+          alert(`Error: ${error.message}`);
+        } finally {
+          await this.updateSubscriptionUI();
+          notifyButton.disabled = false;
         }
       });
     }
-    this.updateSubscriptionUI();
   }
 
   async checkSubscriptionStatus() {

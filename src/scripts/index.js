@@ -14,21 +14,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     drawerNavigation: document.getElementById('navigation-drawer'),
     skipLinkButton: document.getElementById('skip-link'),
   });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const existingRegistrations = await navigator.serviceWorker.getRegistrations();
+        for (let reg of existingRegistrations) {
+          await reg.unregister();
+          console.log('Unregistered existing service worker');
+        }
+
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker registered with scope:', registration.scope);
+      } catch (error) {
+        console.error('Service Worker registration failed:', error);
+      }
+    });
+  }
   await app.renderPage();
 
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('sw.js', { type: 'module' })
-        .then((registration) => {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
-    }
 
     Camera.stopAllStreams();
   });
