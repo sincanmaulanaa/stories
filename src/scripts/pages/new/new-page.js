@@ -4,7 +4,7 @@ import * as CityCareAPI from '../../data/api';
 import { generateLoaderAbsoluteTemplate } from '../../templates';
 import Camera from '../../utils/camera';
 import Screenshot from '../../utils/screenshot';
-import { initializeMap, addMarkersToMap } from '../../utils/map-utils';
+import { initializeMap } from '../../utils/map-utils';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -23,101 +23,133 @@ export default class NewPage {
 
   async render() {
     return `
-      <section>
-        <div class="new-report__header">
-          <div class="container">
-            <h1 class="new-report__header__title">Buat Story Baru</h1>
-            <p class="new-report__header__description">
-              Silakan lengkapi formulir di bawah dan buat story terbaik mu.<br>
-              Pastikan story yang dibuat adalah karya mu sendiri.
-            </p>
-            <div class="shortcuts-container">
-            <br>
-              <div class="shortcuts-buttons">
-                <button id="focus-description" class="shortcut-btn" title="Fokus ke deskripsi (Ctrl+1) - Tekan Ctrl+, untuk semua shortcut">
-                  <i class="fas fa-align-left"></i> <span>Deskripsi</span>
-                </button>
-                <button id="focus-location" class="shortcut-btn" title="Fokus ke peta (Ctrl+2) - Tekan Ctrl+, untuk semua shortcut">
-                  <i class="fas fa-map-marker-alt"></i> <span>Peta</span>
-                </button>
-                <button id="take-quick-screenshot" class="shortcut-btn" title="Ambil screenshot cepat (Ctrl+3) - Tekan Ctrl+, untuk semua shortcut">
-                  <i class="fas fa-camera"></i> <span>Screenshot</span>
-                </button>
-                ${
-                  this.#isMobile
-                    ? `
-                <button id="open-mobile-camera" class="shortcut-btn" title="Buka kamera mobile">
-                  <i class="fas fa-mobile-alt"></i> <span>Kamera</span>
-                </button>`
-                    : ''
-                }
-                <button id="show-help" class="shortcut-btn" title="Tampilkan semua shortcut (Ctrl+,)">
-                  <i class="fas fa-question-circle"></i> <span>Bantuan Shortcut</span>
-                </button>
-              </div>
+    <div class="new-story-container">
+      <div class="new-story-header">
+        <div class="container">
+          <h1 class="new-story-title">Buat Story Baru</h1>
+          <p class="new-story-subtitle">
+            Bagikan cerita menarik dan buat koleksi cerita terbaikmu
+          </p>
+          
+          <div class="shortcut-panel">
+            <div class="shortcut-buttons">
+              <button id="focus-description" class="shortcut-btn" title="Fokus ke deskripsi (Ctrl+1)">
+                <i class="fas fa-align-left"></i> <span>Deskripsi</span>
+              </button>
+              <button id="focus-location" class="shortcut-btn" title="Fokus ke peta (Ctrl+2)">
+                <i class="fas fa-map-marker-alt"></i> <span>Peta</span>
+              </button>
+              <button id="take-quick-screenshot" class="shortcut-btn" title="Ambil screenshot cepat (Ctrl+3)">
+                <i class="fas fa-camera"></i> <span>Screenshot</span>
+              </button>
+              ${
+                this.#isMobile
+                  ? `
+              <button id="open-mobile-camera" class="shortcut-btn" title="Buka kamera mobile">
+                <i class="fas fa-mobile-alt"></i> <span>Kamera</span>
+              </button>`
+                  : ''
+              }
+              <button id="show-help" class="shortcut-btn" title="Tampilkan semua shortcut (Ctrl+,)">
+                <i class="fas fa-keyboard"></i> <span>Shortcut</span>
+              </button>
             </div>
           </div>
         </div>
-      </section>
-  
-      <section class="container">
-        <div class="new-form__container">
-          <form id="new-form" class="new-form">
-            <div class="form-control">
-              <label for="description-input" class="new-form__description__title">Tulis Ceritamu</label>
-              <div class="new-form__description__container">
-                <textarea id="description-input" name="description" placeholder="Masukkan Cerita terbaikmu..."></textarea>
-              </div>
-            </div>
-            <div class="form-control">
-              <label class="new-form__documentations__title">Dokumentasi</label>
-              <div id="documentations-more-info">Anda dapat menyertakan foto sebagai dokumentasi.</div>
-              <div class="new-form__documentations__container">
-                <div class="new-form__documentations__buttons">
-                  <button id="documentations-input-button" class="btn btn-outline" type="button">
-                    <i class="fas fa-folder-open"></i> Pilih Gambar
-                  </button>
-                  <input id="documentations-input" name="documentations" type="file" accept="image/*" multiple hidden>
-                  <button id="open-documentations-camera-button" class="btn btn-outline" type="button">
-                    <i class="fas fa-camera"></i> Buka Kamera
-                  </button>
-                  <button id="take-screenshot-button" class="btn btn-outline" type="button">
-                    <i class="fas fa-desktop"></i> Screenshot
-                  </button>
+      </div>
+
+      <div class="container">
+        <div class="new-story-form-container">
+          <form id="new-form" class="new-story-form">
+            <div class="form-panel">
+              <div class="form-section">
+                <label for="description-input" class="form-section-title">
+                  <i class="fas fa-pen"></i> Tulis Ceritamu
+                </label>
+                <div class="form-section-content">
+                  <textarea 
+                    id="description-input" 
+                    name="description" 
+                    placeholder="Bagikan pengalamanmu, cerita perjalanan, atau momen istimewa yang ingin kamu abadikan..."
+                  ></textarea>
                 </div>
-                <div id="camera-container" class="new-form__camera__container">
-                  <video id="camera-video">Video stream not available.</video>
-                  <canvas id="camera-canvas"></canvas>
-                  <div class="new-form__camera__tools">
-                    <select id="camera-select"></select>
-                    <button id="camera-take-button" class="btn" type="button">Ambil Gambar</button>
+              </div>
+              
+              <div class="form-section">
+                <label class="form-section-title">
+                  <i class="fas fa-images"></i> Dokumentasi
+                </label>
+                <div class="form-section-info">
+                  Tambahkan foto untuk melengkapi ceritamu
+                </div>
+                <div class="form-section-content">
+                  <div class="documentation-tools">
+                    <button id="documentations-input-button" class="doc-btn" type="button">
+                      <i class="fas fa-folder-open"></i> Pilih Gambar
+                    </button>
+                    <input id="documentations-input" name="documentations" type="file" accept="image/*" multiple hidden>
+                    <button id="open-documentations-camera-button" class="doc-btn" type="button">
+                      <i class="fas fa-camera"></i> Buka Kamera
+                    </button>
+                    <button id="take-screenshot-button" class="doc-btn" type="button">
+                      <i class="fas fa-desktop"></i> Screenshot
+                    </button>
+                  </div>
+                  
+                  <div id="camera-container" class="camera-container">
+                    <video id="camera-video">Video stream not available.</video>
+                    <canvas id="camera-canvas"></canvas>
+                    <div class="camera-tools">
+                      <select id="camera-select"></select>
+                      <button id="camera-take-button" class="btn" type="button">
+                        <i class="fas fa-camera"></i> Ambil Gambar
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div id="screenshot-loading" class="screenshot-loading" style="display: none;"></div>
+                  <div class="documentation-preview">
+                    <ul id="documentations-taken-list" class="documentation-list"></ul>
                   </div>
                 </div>
-                <div id="screenshot-loading" class="screenshot-loading" style="display: none;"></div>
-                <ul id="documentations-taken-list" class="new-form__documentations__outputs"></ul>
               </div>
-            </div>
-            <div class="form-control">
-              <div class="new-form__location__title">Lokasi</div>
-              <div class="new-form__location__container">
-                <div class="new-form__location__map__container">
-                  <div id="map" class="new-form__location__map"></div>
-                  <div id="map-loading-container"></div>
+              
+              <div class="form-section">
+                <div class="form-section-title">
+                  <i class="fas fa-map-marker-alt"></i> Lokasi
                 </div>
-                <div class="new-form__location__lat-lng">
-                  <input type="number" step="any" name="latitude" id="latitudeInput" value="-6.352003776761075">
-                  <input type="number" step="any" name="longitude" id="longitudeInput" value="106.83254971864685">
+                <div class="form-section-content">
+                  <div class="map-container">
+                    <div id="map" class="location-map"></div>
+                    <div id="map-loading-container"></div>
+                  </div>
+                  <div class="coordinates-inputs">
+                    <div class="coordinate-input">
+                      <label for="latitudeInput">Latitude</label>
+                      <input type="number" step="any" name="latitude" id="latitudeInput" value="-6.352003776761075">
+                    </div>
+                    <div class="coordinate-input">
+                      <label for="longitudeInput">Longitude</label>
+                      <input type="number" step="any" name="longitude" id="longitudeInput" value="106.83254971864685">
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="form-buttons">
-              <button class="btn" type="submit" id="submit-button-container">Buat Laporan</button>
-              <a class="btn btn-outline sb-btn" href="#/">Batal</a>
+              
+              <div class="form-actions">
+                <button class="submit-btn" type="submit" id="submit-button-container">
+                  <i class="fas fa-paper-plane"></i> Publish Story
+                </button>
+                <a class="cancel-btn" href="#/">
+                  <i class="fas fa-times"></i> Batal
+                </a>
+              </div>
             </div>
           </form>
         </div>
-      </section>
-    `;
+      </div>
+    </div>
+  `;
   }
 
   async afterRender() {
